@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Lock, User, Eye, EyeOff, Sparkles, Shield } from "lucide-react";
-import { Button } from "./ui/Button";
-import { Input } from "./ui/Input";
 
 interface LoginPageProps {
     onLogin: () => void;

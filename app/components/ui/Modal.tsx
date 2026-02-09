@@ -2,7 +2,6 @@
 
 import { X } from "lucide-react";
 import { useEffect } from "react";
-import { cn } from "@/app/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ModalProps {

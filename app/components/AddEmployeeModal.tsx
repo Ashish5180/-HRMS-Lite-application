@@ -32,8 +32,9 @@ export function AddEmployeeModal({ isOpen, onClose, onSuccess }: AddEmployeeModa
             onSuccess();
             setFormData({ employeeId: "", fullName: "", email: "", department: "" });
             onClose();
-        } catch (err: any) {
-            setError(err.response?.data?.message || err.response?.data?.error || "Failed to add employee");
+        } catch (err) {
+            const error = err as { response?: { data?: { message?: string; error?: string } } };
+            setError(error.response?.data?.message || error.response?.data?.error || "Failed to add employee");
         } finally {
             setIsLoading(false);
         }

@@ -2,7 +2,7 @@
 
 import { Users, UserCheck, UserX, TrendingUp, Sparkles } from "lucide-react";
 import { Card, CardContent } from "./ui/Card";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { motion, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 
 interface DashboardSummaryProps {

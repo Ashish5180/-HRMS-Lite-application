@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Users, CalendarCheck, LayoutDashboard, LogOut } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Navbar } from "./components/Navbar";
 import { EmployeeList } from "./components/EmployeeList";
 import { EnhancedEmployeeList } from "./components/EnhancedEmployeeList";
@@ -16,16 +16,34 @@ import { employeeApi, attendanceApi } from "./lib/api";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface Employee {
+  _id: string;
+  employeeId: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  department: string;
+  position: string;
+  joiningDate: string;
+}
+
+interface AttendanceRecord {
+  _id: string;
+  employee: string;
+  date: string;
+  status: string;
+}
+
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [employees, setEmployees] = useState([]);
-  const [attendanceToday, setAttendanceToday] = useState([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [attendanceToday, setAttendanceToday] = useState<AttendanceRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editEmployee, setEditEmployee] = useState<any>(null);
-  const [historyEmployee, setHistoryEmployee] = useState<any>(null);
+  const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
+  const [historyEmployee, setHistoryEmployee] = useState<Employee | null>(null);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -38,7 +56,7 @@ export default function Home() {
       ]);
       setEmployees(empRes.data.data);
       setAttendanceToday(attRes.data.data);
-    } catch (err: any) {
+    } catch {
       setError("Failed to fetch data. Please check if the backend is running.");
     } finally {
       setIsLoading(false);
@@ -73,21 +91,21 @@ export default function Home() {
 
   const totalEmployees = employees.length;
   // Count Present, Half Day, and Work From Home as "working"
-  const presentToday = attendanceToday.filter((a: any) =>
+  const presentToday = attendanceToday.filter((a) =>
     ['Present', 'Half Day', 'Work From Home'].includes(a.status)
   ).length;
-  const absentToday = attendanceToday.filter((a: any) => a.status === 'Absent').length;
+  const absentToday = attendanceToday.filter((a) => a.status === 'Absent').length;
 
   const handleDeleteEmployee = async (id: string) => {
     try {
       await employeeApi.delete(id);
       fetchData();
-    } catch (err) {
+    } catch {
       alert("Failed to delete employee");
     }
   };
 
-  const handleUpdateEmployee = async (id: string, data: any) => {
+  const handleUpdateEmployee = async (id: string, data: Record<string, unknown>) => {
     try {
       await employeeApi.update(id, data);
       fetchData();

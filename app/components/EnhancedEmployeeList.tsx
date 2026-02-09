@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Trash2, Edit, Eye, Search, Filter, Download,
+    Trash2, Edit, Eye, Search, Download,
     Mail, Phone, Briefcase, Calendar, AlertTriangle,
     CheckCircle2, XCircle, Users, SortAsc, SortDesc,
-    Grid3x3, List, MoreVertical, Star, UserPlus,
-    TrendingUp, Award, MapPin, Building2
+    Grid3x3, List, Star,
+    Building2
 } from "lucide-react";
 import { Button } from "./ui/Button";
 import { Card, CardContent } from "./ui/Card";
@@ -211,7 +211,7 @@ export function EnhancedEmployeeList({
                         {/* Sort By */}
                         <select
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as any)}
+                            onChange={(e) => setSortBy(e.target.value as "name" | "date" | "department")}
                             className="rounded-lg border px-4 py-2.5 transition-all focus:outline-none focus:ring-2"
                             style={{
                                 background: '#16161A',

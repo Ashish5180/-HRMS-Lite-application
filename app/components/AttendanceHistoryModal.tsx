@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Modal } from "./ui/Modal";
-import { Badge } from "./ui/Badge";
 import { Card, CardContent } from "./ui/Card";
 import { attendanceApi } from "@/app/lib/api";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, isSameDay, startOfWeek, endOfWeek, addDays } from "date-fns";
 import {
-    Calendar, Loader2, TrendingUp, Award, CheckCircle2, XCircle,
+    Calendar, Loader2, Award, CheckCircle2, XCircle,
     Clock, Home, Coffee, Heart, Briefcase, ChevronLeft, ChevronRight,
-    Download, Filter, BarChart3, PieChart
+    Download, BarChart3, PieChart
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -47,12 +46,6 @@ export function AttendanceHistoryModal({ isOpen, onClose, employee }: Attendance
     const [viewMode, setViewMode] = useState<'calendar' | 'list' | 'stats'>('calendar');
     const [hoveredDay, setHoveredDay] = useState<{ date: Date; status: string; notes?: string } | null>(null);
 
-    useEffect(() => {
-        if (isOpen && employee?._id) {
-            fetchHistory();
-        }
-    }, [isOpen, employee]);
-
     const fetchHistory = async () => {
         if (!employee?._id) return;
         setIsLoading(true);
@@ -65,6 +58,13 @@ export function AttendanceHistoryModal({ isOpen, onClose, employee }: Attendance
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (isOpen && employee?._id) {
+            fetchHistory();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, employee]);
 
     // Calculate statistics
     const stats = {
@@ -161,7 +161,7 @@ export function AttendanceHistoryModal({ isOpen, onClose, employee }: Attendance
                             ].map((tab) => (
                                 <button
                                     key={tab.mode}
-                                    onClick={() => setViewMode(tab.mode as any)}
+                                    onClick={() => setViewMode(tab.mode as 'calendar' | 'list' | 'stats')}
                                     className="relative flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all"
                                     style={{
                                         color: viewMode === tab.mode ? '#0E0E10' : '#B1B1B8',

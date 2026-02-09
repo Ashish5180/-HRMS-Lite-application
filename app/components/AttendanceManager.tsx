@@ -2,13 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Check, X, Calendar, Clock, Home, Briefcase, Coffee, Heart, Loader2 } from "lucide-react";
-import { Button } from "./ui/Button";
 import { Card, CardContent } from "./ui/Card";
-import { Badge } from "./ui/Badge";
 import { attendanceApi, employeeApi } from "@/app/lib/api";
 import { format } from "date-fns";
-import { cn } from "@/app/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface Employee {
     _id: string;
@@ -62,6 +59,7 @@ export function AttendanceManager() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedDate]);
 
     const handleMarkAttendance = async (employeeId: string, status: AttendanceStatus) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { X, Save, User, Mail, Phone, Briefcase, Calendar, Hash } from "lucide-react";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
