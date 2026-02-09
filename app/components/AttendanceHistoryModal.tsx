@@ -11,25 +11,15 @@ import {
     Download, BarChart3, PieChart
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface AttendanceRecord {
-    _id: string;
-    date: string;
-    status: 'Present' | 'Absent' | 'Half Day' | 'Paid Leave' | 'Sick Leave' | 'Casual Leave' | 'Work From Home';
-    notes?: string;
-}
+import { Employee, AttendanceRecord } from "../types";
 
 interface AttendanceHistoryModalProps {
     isOpen: boolean;
     onClose: () => void;
-    employee: {
-        _id: string;
-        fullName: string;
-        employeeId: string;
-    } | null;
+    employee: Employee | null;
 }
 
-const statusConfig = {
+const statusConfig: Record<string, { icon: React.ElementType; color: string; bg: string; label: string }> = {
     'Present': { icon: CheckCircle2, color: '#22c55e', bg: 'rgba(34, 197, 94, 0.1)', label: 'Present' },
     'Half Day': { icon: Clock, color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.1)', label: 'Half Day' },
     'Work From Home': { icon: Home, color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)', label: 'WFH' },

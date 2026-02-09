@@ -13,17 +13,7 @@ import { Button } from "./ui/Button";
 import { Card, CardContent } from "./ui/Card";
 import { Badge } from "./ui/Badge";
 import { format } from "date-fns";
-
-interface Employee {
-    _id: string;
-    employeeId: string;
-    fullName: string;
-    email: string;
-    phone: string;
-    department: string;
-    position: string;
-    joiningDate: string;
-}
+import { Employee } from "../types";
 
 interface EnhancedEmployeeListProps {
     employees: Employee[];

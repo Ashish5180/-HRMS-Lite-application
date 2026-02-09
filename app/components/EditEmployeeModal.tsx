@@ -4,18 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { X, Save, User, Mail, Phone, Briefcase, Calendar, Hash } from "lucide-react";
 import { Button } from "./ui/Button";
-import { Input } from "./ui/Input";
-
-interface Employee {
-    _id: string;
-    employeeId: string;
-    fullName: string;
-    email: string;
-    phone: string;
-    department: string;
-    position: string;
-    joiningDate: string;
-}
+import { Employee } from "../types";
 
 interface EditEmployeeModalProps {
     isOpen: boolean;

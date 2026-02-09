@@ -15,24 +15,7 @@ import { Button } from "./components/ui/Button";
 import { employeeApi, attendanceApi } from "./lib/api";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface Employee {
-  _id: string;
-  employeeId: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  department: string;
-  position: string;
-  joiningDate: string;
-}
-
-interface AttendanceRecord {
-  _id: string;
-  employee: string;
-  date: string;
-  status: string;
-}
+import { Employee, AttendanceRecord } from "./types";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

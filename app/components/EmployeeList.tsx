@@ -4,14 +4,7 @@ import { Trash2, Plus, Mail, Building2, Fingerprint, Loader2, AlertCircle } from
 import { Button } from "./ui/Button";
 import { Card, CardContent } from "./ui/Card";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface Employee {
-    _id: string;
-    employeeId: string;
-    fullName: string;
-    email: string;
-    department: string;
-}
+import { Employee } from "../types";
 
 interface EmployeeListProps {
     employees: Employee[];

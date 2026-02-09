@@ -6,20 +6,7 @@ import { Card, CardContent } from "./ui/Card";
 import { attendanceApi, employeeApi } from "@/app/lib/api";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-
-interface Employee {
-    _id: string;
-    employeeId: string;
-    fullName: string;
-}
-
-interface AttendanceRecord {
-    _id: string;
-    employee: string | { _id: string; fullName: string; employeeId: string };
-    date: string;
-    status: 'Present' | 'Absent' | 'Half Day' | 'Paid Leave' | 'Sick Leave' | 'Casual Leave' | 'Work From Home';
-    notes?: string;
-}
+import { Employee, AttendanceRecord } from "../types";
 
 type AttendanceStatus = 'Present' | 'Absent' | 'Half Day' | 'Paid Leave' | 'Sick Leave' | 'Casual Leave' | 'Work From Home';
 
