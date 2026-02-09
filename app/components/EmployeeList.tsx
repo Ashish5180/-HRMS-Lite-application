@@ -104,17 +104,33 @@ export function EmployeeList({ employees, isLoading, error, onDelete, onAdd, onV
                                                 size="sm"
                                                 className="flex-1 text-xs"
                                                 onClick={() => onViewHistory(employee)}
+                                                style={{
+                                                    borderColor: '#27272A',
+                                                    color: '#C9A227'
+                                                }}
                                             >
                                                 History
                                             </Button>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="h-8 w-8 dark:text-red-400 dark:hover:bg-red-400/10 text-zinc-400 hover:text-red-600 hover:bg-red-50 border-zinc-100 dark:border-zinc-800"
+                                            <button
+                                                className="flex h-8 w-8 items-center justify-center rounded-lg border transition-all hover:scale-110"
                                                 onClick={() => onDelete(employee._id)}
+                                                style={{
+                                                    borderColor: '#27272A',
+                                                    color: '#ef4444',
+                                                    background: 'transparent'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                                                    e.currentTarget.style.borderColor = '#ef4444';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = 'transparent';
+                                                    e.currentTarget.style.borderColor = '#27272A';
+                                                }}
+                                                title="Delete Employee"
                                             >
                                                 <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

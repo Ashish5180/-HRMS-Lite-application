@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -10,6 +10,7 @@ const api = axios.create({
 export const employeeApi = {
     getAll: () => api.get('/employees'),
     create: (data: any) => api.post('/employees', data),
+    update: (id: string, data: any) => api.put(`/employees/${id}`, data),
     delete: (id: string) => api.delete(`/employees/${id}`),
 };
 

@@ -1,25 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Users, CalendarCheck, LayoutDashboard } from "lucide-react";
+import { Plus, Users, CalendarCheck, LayoutDashboard, LogOut } from "lucide-react";
 import { Navbar } from "./components/Navbar";
 import { EmployeeList } from "./components/EmployeeList";
+import { EnhancedEmployeeList } from "./components/EnhancedEmployeeList";
 import { AddEmployeeModal } from "./components/AddEmployeeModal";
+import { EditEmployeeModal } from "./components/EditEmployeeModal";
 import { AttendanceManager } from "./components/AttendanceManager";
 import { DashboardSummary } from "./components/DashboardSummary";
 import { AttendanceHistoryModal } from "./components/AttendanceHistoryModal";
+import { LoginPage } from "./components/LoginPage";
 import { Button } from "./components/ui/Button";
 import { employeeApi, attendanceApi } from "./lib/api";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [employees, setEmployees] = useState([]);
   const [attendanceToday, setAttendanceToday] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editEmployee, setEditEmployee] = useState<any>(null);
   const [historyEmployee, setHistoryEmployee] = useState<any>(null);
 
   const fetchData = async () => {
@@ -41,27 +46,61 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchData();
+    // Check if user is authenticated
+    const authStatus = localStorage.getItem("isAuthenticated");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+      fetchData();
+    }
   }, []);
 
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    fetchData();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    setIsAuthenticated(false);
+    setEmployees([]);
+    setAttendanceToday([]);
+  };
+
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
   const totalEmployees = employees.length;
-  const presentToday = attendanceToday.filter((a: any) => a.status === 'Present').length;
+  // Count Present, Half Day, and Work From Home as "working"
+  const presentToday = attendanceToday.filter((a: any) =>
+    ['Present', 'Half Day', 'Work From Home'].includes(a.status)
+  ).length;
   const absentToday = attendanceToday.filter((a: any) => a.status === 'Absent').length;
 
   const handleDeleteEmployee = async (id: string) => {
-    if (confirm("Are you sure you want to delete this employee? All attendance records will be removed.")) {
-      try {
-        await employeeApi.delete(id);
-        fetchData();
-      } catch (err) {
-        alert("Failed to delete employee");
-      }
+    try {
+      await employeeApi.delete(id);
+      fetchData();
+    } catch (err) {
+      alert("Failed to delete employee");
+    }
+  };
+
+  const handleUpdateEmployee = async (id: string, data: any) => {
+    try {
+      await employeeApi.update(id, data);
+      fetchData();
+      setEditEmployee(null);
+    } catch (err) {
+      alert("Failed to update employee");
+      throw err;
     }
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="min-h-screen bg-stone-50 dark:bg-zinc-950">
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout} />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
@@ -75,8 +114,8 @@ export default function Home() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Dashboard</h1>
-                  <p className="text-zinc-500 dark:text-zinc-400">Overview of your workforce and attendance.</p>
+                  <h1 className="text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-50">Dashboard</h1>
+                  <p className="mt-1 text-base text-stone-600 dark:text-stone-400">Overview of your workforce and attendance metrics.</p>
                 </div>
                 <Button icon={Plus} onClick={() => setIsModalOpen(true)}>Add Employee</Button>
               </div>
@@ -88,7 +127,7 @@ export default function Home() {
               />
 
               <div className="space-y-4">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Recent Employees</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50">Recent Employees</h2>
                 <EmployeeList
                   employees={employees.slice(0, 3)}
                   isLoading={isLoading}
@@ -111,18 +150,20 @@ export default function Home() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Employees</h1>
-                  <p className="text-zinc-500 dark:text-zinc-400">Manage your employee directory.</p>
+                  <h1 className="text-4xl font-bold tracking-tight" style={{ color: '#FAFAFA' }}>Employees</h1>
+                  <p className="mt-1 text-base" style={{ color: '#B1B1B8' }}>Manage your employee directory with advanced features.</p>
                 </div>
-                <Button icon={Plus} onClick={() => setIsModalOpen(true)}>Add Employee</Button>
+                <Button icon={Plus} onClick={() => setIsModalOpen(true)} style={{ background: 'linear-gradient(135deg, #C9A227 0%, #b8911f 100%)', color: '#0E0E10' }}>
+                  Add Employee
+                </Button>
               </div>
 
-              <EmployeeList
+              <EnhancedEmployeeList
                 employees={employees}
                 isLoading={isLoading}
                 error={error}
                 onDelete={handleDeleteEmployee}
-                onAdd={() => setIsModalOpen(true)}
+                onEdit={setEditEmployee}
                 onViewHistory={setHistoryEmployee}
               />
             </motion.div>
@@ -146,6 +187,15 @@ export default function Home() {
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchData}
       />
+
+      {editEmployee && (
+        <EditEmployeeModal
+          isOpen={!!editEmployee}
+          onClose={() => setEditEmployee(null)}
+          employee={editEmployee}
+          onUpdate={handleUpdateEmployee}
+        />
+      )}
 
       <AttendanceHistoryModal
         isOpen={!!historyEmployee}
